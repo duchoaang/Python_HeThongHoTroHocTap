@@ -1,0 +1,76 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Profile {% endblock %}
+
+
+{% block content %}
+<section id="content">
+		<!-- NAVBAR -->
+
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+			<h1 class="title">Thực hành</h1>
+			<ul class="breadcrumbs">
+				<li><a href="#">Home</a></li>
+				<li class="divider">/</li>
+				<li><a href="#" class="active">Thực hành</a></li>
+			</ul>
+
+			<form >
+				<div class="form-group" >
+
+
+					<div class="card" style="width:400px">
+					  <img class="card-img-top" src="{{baitapchitiet.image}}" alt="Card image">
+					  <div class="card-body">
+						<h4 class="card-title">{{baitapchitiet.ten_bai_tap}}</h4>
+						<p class="card-text">{{baitapchitiet.de_bai}}...</p>
+						<a href="#" class="btn btn-primary">Thực hành</a>
+					  </div>
+					</div>
+
+
+					<h1>Dap an dung {{dap_an_dung.noi_dung_dap_an}}</h1>
+				</div>
+			</form>
+
+	<div class="data">
+				<div class="content-data">
+					<div class="head">
+						<h3>{{baitapchitiet.ten_bai_tap}}</h3>
+						<div class="menu">
+							<i class='bx bx-dots-horizontal-rounded icon'></i>
+							<ul class="menu-link">
+								<li><a href="#">Edit</a></li>
+								<li><a href="#">Save</a></li>
+								<li><a href="#">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="chart">
+						<h4>Đề tài: {{baitapchitiet.de_bai}}</h4>
+						<h5>{{baitapchitiet.cau_hoi}}</h5>
+						{% set labels = ['A', 'B', 'C', 'D'] %}
+						{% for dapan in dap_an %}
+							<button>{{ labels[loop.index0] }}. {{ dapan.noi_dung_dap_an }}</button>
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+
+
+
+
+		</main>
+		<!-- MAIN -->
+	</section>
+
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

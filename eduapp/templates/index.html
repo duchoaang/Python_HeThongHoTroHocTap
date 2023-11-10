@@ -1,0 +1,184 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Trang chu {% endblock %}
+{% block css %}
+ <link href="{{ url_for('static', filename='css/index.css') }}"
+      rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<section id="content">
+		<!-- NAVBAR -->
+
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+			<h1 class="title">Chào <span style="color:red; font-weight:800">{{user.name}} </span></h1>
+			<ul class="breadcrumbs">
+				<li><a href="#">Home</a></li>
+				<li class="divider">/</li>
+				<li><a href="#" class="active">Thống kê dữ liệu học tập</a></li>
+			</ul>
+			<div class="info-data">
+				<div class="card">
+					<div class="head">
+						<div>
+							<h2>{{user.diemHeMuoi}}</h2>
+							<p>Điểm hệ 10</p>
+						</div>
+						<i class='bx bx-trending-up icon' ></i>
+					</div>
+					<span class="progress" data-value="{{ (user.diemHeMuoi / 10) * 100 }}%"></span>
+					<span class="label">{{ (user.diemHeMuoi / 10) * 10 }}/10</span>
+				</div>
+
+				<div class="card">
+					<div class="head">
+						<div>
+							<h2>{{user.gpa}}</h2>
+							<p>Điểm trung bình (hệ 4)</p>
+						</div>
+						<i class='bx bx-trending-up icon' ></i>
+					</div>
+					<span class="progress" data-value="{{ (user.gpa / 4) * 100 }}%"></span>
+					<span class="label">{{ user.gpa}}/4.0</span>
+				</div>
+				<div class="card">
+					<div class="head">
+						<div>
+							<h2>{{user.diem_ren_luyen}}</h2>
+							<p>Điểm rèn luyện</p>
+						</div>
+						<i class='bx bx-trending-up icon' ></i>
+					</div>
+					<span class="progress" data-value="{{ (user.diem_ren_luyen / 100) * 100 }}%"></span>
+					<span class="label">{{user.diem_ren_luyen}}/100</span>
+				</div>
+			</div>
+			<div class="data">
+				<div class="content-data">
+					<div class="head">
+						<h3>Thống kê điểm</h3>
+						<div class="menu">
+							<i class='bx bx-dots-horizontal-rounded icon'></i>
+							<ul class="menu-link">
+								<li><a href="#">Edit</a></li>
+								<li><a href="#">Save</a></li>
+								<li><a href="#">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="chart">
+						<div id="chart">
+						  <canvas id="myChart"></canvas>
+
+						</div>
+					</div>
+				</div>
+				<div class="content-data">
+					<div class="head">
+						<h3>Cảnh báo học tập</h3>
+						<div class="menu">
+							<i class='bx bx-dots-horizontal-rounded icon'></i>
+							<ul class="menu-link">
+								<li><a href="#">Edit</a></li>
+								<li><a href="#">Save</a></li>
+								<li><a href="#">Remove</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="chat-box">
+						<div>Cảnh báo học tập</div>
+						<canvas id="myChart2"></canvas>
+					</div>
+
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	const ctx = document.getElementById('myChart');
+	var thoi_gian = [];
+	  var so_diem = [];
+
+  {% for diem in diem_user %}
+    thoi_gian.push("{{ diem.hoc_ky.ma_hoc_ky }}");
+    so_diem.push({{ diem.diem_so }});
+  {% endfor %}
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: thoi_gian,
+      datasets: [{
+        label: 'Số điểm',
+        data: so_diem,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  	var thoi_gian_warning = [];
+	  var so_diem_warning = [];
+	  var ten_mon_hoc_warning = [];
+	const ctx2 = document.getElementById('myChart2');
+{% for diem in diem_user_warning %}
+  thoi_gian_warning.push("{{ diem.hoc_ky.ma_hoc_ky }}");
+  so_diem_warning.push({{ diem.diem_so }});
+  ten_mon_hoc_warning.push("{{ diem.mon_hoc.ten_mon_hoc }}");  // Lấy tên môn học
+{% endfor %}
+  console.log(thoi_gian_warning)
+	new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: thoi_gian_warning,
+    datasets: [{
+      label: 'Số điểm',
+      data: so_diem_warning,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          generateLabels: function (chart) {
+            var data = chart.data;
+            if (data.labels.length && data.labels.length === data.datasets[0].data.length) {
+              return data.labels.map(function (label, i) {
+                return {
+                  text: ten_mon_hoc_warning[i] + ' - ' + label,  // Hiển thị tên môn học và thời gian
+                  fillStyle: data.datasets[0].backgroundColor[i],
+                  hidden: false,
+                  lineCap: 'butt',
+                  strokeStyle: data.datasets[0].borderColor[i],
+                  lineWidth: data.datasets[0].borderWidth[i]
+                };
+              });
+            }
+            return [];
+          }
+        }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Profile {% endblock %}
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+<section id="content">
+		<!-- NAVBAR -->
+
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+			<h1 class="title">Bài tập nhiều đáp án</h1>
+			<ul class="breadcrumbs">
+				<li><a href="#">Home</a></li>
+				<li class="divider">/</li>
+				<li><a href="#" class="active">Thông tin cá nhân</a></li>
+			</ul>
+
+			<form>
+				<div class="form-group" >
+					{% for bt in all_bai_tap %}
+					<div class="card" style="width:400px">
+					  <img class="card-img-top" src="{{bt.image}}" alt="Card image">
+					  <div class="card-body">
+						<h4 class="card-title">{{bt.ten_bai_tap}}</h4>
+<!--						<h4 class="card-title">{{bt.id}}</h4>-->
+						<p class="card-text">{{bt.de_bai}}...</p>
+						<a href="{{ url_for('baitap_chitiet', id=bt.id) }}" class="btn btn-primary">Thực hành</a>
+					  </div>
+					</div>
+					{% endfor %}
+				</div>
+			</form>
+
+
+
+		</main>
+		<!-- MAIN -->
+	</section>
+
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
