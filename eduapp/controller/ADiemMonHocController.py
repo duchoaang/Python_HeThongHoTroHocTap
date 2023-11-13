@@ -24,3 +24,7 @@ def get_diem(user_id):
     else:
         return jsonify({'error': 'Diem not found'})
 
+# @app.route('api/check-dap-an')
+# def check_da_an():
+#
+# dap_an = request.

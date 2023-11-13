@@ -2,8 +2,12 @@ from flask import render_template, request,redirect,session,jsonify,url_for
 from eduapp import app, login
 import dao
 from eduapp.routes.api import api
-
 from flask_login import login_user, current_user, logout_user
+from openai import OpenAI
+client = OpenAI(
+    api_key="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",
+)
+
 @app.route("/")
 def index():
     if current_user.is_authenticated:
@@ -89,7 +93,27 @@ def baitap_chitiet(id):
     # print(bai_tap)
     return render_template("baitap_chitiet.html", baitapchitiet=bai_tap, dap_an =dap_an, dap_an_dung= dap_an_dung)
 
+@app.route('/chat', methods=['POST'])
+def chat():
+
+    user_input = request.json.get('user_input')
+    # user_input = "Say hi"
+    chat_response = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": user_input,
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+
+    reply = chat_response.choices[0].message.content
+    print(reply)
+    return jsonify({'reply': reply})
+
+
 app.register_blueprint(api, url_prefix='/api')
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5051)
+    app.run(debug=True, port=5050)

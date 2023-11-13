@@ -1,13 +1,17 @@
 {% extends 'layout/base.html' %}
 
 {% block title %} Profile {% endblock %}
-
+{% block css %}
+ <link href="{{ url_for('static', filename='css/baitap_chitiet.css') }}"
+      rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 <section id="content">
 		<!-- NAVBAR -->
 
 		<!-- NAVBAR -->
+
 
 		<!-- MAIN -->
 		<main>
@@ -52,9 +56,14 @@
 					<div class="chart">
 						<h4>Đề tài: {{baitapchitiet.de_bai}}</h4>
 						<h5>{{baitapchitiet.cau_hoi}}</h5>
+
 						{% set labels = ['A', 'B', 'C', 'D'] %}
 						{% for dapan in dap_an %}
-							<button>{{ labels[loop.index0] }}. {{ dapan.noi_dung_dap_an }}</button>
+						<div id="thongBao"></div>
+						<button onclick="kiemTraDapAn('{{ dapan.noi_dung_dap_an }}')">
+							{{ labels[loop.index0] }}. {{ dapan.noi_dung_dap_an }}
+						</button>
+
 						{% endfor %}
 					</div>
 				</div>
@@ -62,15 +71,34 @@
 			</div>
 
 
-
-
 		</main>
 		<!-- MAIN -->
 	</section>
 
+<script>
+	let i = 1;
+	let text = document.getElementById("thongBao")
+	function kiemTraDapAn(dapAn) {
+		i++;
+		console.log(dapAn)
+		if(dapAn === "{{dap_an_dung.noi_dung_dap_an}}"){
+			hienThiThongBao("Dung")
+		}
+		else{
+			console.log("duoc2  goi")
 
+			hienThiThongBao("Sai")
+		}
+<!--		if(i==2){-->
+<!--			hienThiThongBao("so 2")-->
+<!--		}-->
+   }
+function hienThiThongBao(thongBao) {
+    text.innerText = thongBao;
+}
+</script>
 {% endblock %}
 
 {% block script %}
-
+<!--<script src="{{ url_for('static', filename='js/baitap_chitiet.js')}}"></script>-->
 {% endblock %}
