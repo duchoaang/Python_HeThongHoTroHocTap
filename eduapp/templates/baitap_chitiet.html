@@ -45,26 +45,26 @@
 					<div class="head">
 						<h3>{{baitapchitiet.ten_bai_tap}}</h3>
 						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
+			<i class='bx bxs-time'></i>
+								<div id="countdownTimer"></div>
 						</div>
+
 					</div>
 					<div class="chart">
+
 						<h4>Đề tài: {{baitapchitiet.de_bai}}</h4>
 						<h5>{{baitapchitiet.cau_hoi}}</h5>
+						<div id="thongBao"></div>
 
+						<div class="dap_an">
 						{% set labels = ['A', 'B', 'C', 'D'] %}
 						{% for dapan in dap_an %}
-						<div id="thongBao"></div>
-						<button onclick="kiemTraDapAn('{{ dapan.noi_dung_dap_an }}')">
+
+						<button class="btn_dap_an" onclick="kiemTraDapAn(this, '{{ dapan.noi_dung_dap_an }}')">
 							{{ labels[loop.index0] }}. {{ dapan.noi_dung_dap_an }}
 						</button>
-
 						{% endfor %}
+							</div>
 					</div>
 				</div>
 
@@ -76,26 +76,66 @@
 	</section>
 
 <script>
-	let i = 1;
-	let text = document.getElementById("thongBao")
-	function kiemTraDapAn(dapAn) {
-		i++;
-		console.log(dapAn)
-		if(dapAn === "{{dap_an_dung.noi_dung_dap_an}}"){
-			hienThiThongBao("Dung")
-		}
-		else{
-			console.log("duoc2  goi")
+let i = 1;
+let text = document.getElementById("thongBao");
+let countdown;
+let remainingTime = 300; // 300 seconds (5 minutes)
 
-			hienThiThongBao("Sai")
-		}
-<!--		if(i==2){-->
-<!--			hienThiThongBao("so 2")-->
-<!--		}-->
-   }
+// Thêm hàm hiển thị thời gian
+function displayTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secondsRemaining = seconds % 60;
+    const formattedTime = `${minutes}:${secondsRemaining < 10 ? '0' : ''}${secondsRemaining}`;
+    document.getElementById("countdownTimer").innerText = formattedTime;
+}
+
+function kiemTraDapAn(buttonElement, dapAn) {
+    i++;
+    console.log(dapAn);
+
+    let buttons = document.querySelectorAll('.btn_dap_an');
+    buttons.forEach(function(btn) {
+        btn.classList.remove('right_answer', 'wrong_answer');
+    });
+
+    if (dapAn === "{{dap_an_dung.noi_dung_dap_an}}") {
+        hienThiThongBao("Bạn đã trả lời đúng!");
+        buttonElement.classList.add("right_answer");
+        stopCountdown();
+        setTimeout(redirectToBaiTap, 3000); // Chờ 3 giây trước khi chuyển hướng
+    } else {
+        console.log("duoc2 goi");
+        buttonElement.classList.add("wrong_answer");
+        hienThiThongBao("Bạn đã trả lời sai");
+    }
+}
+
 function hienThiThongBao(thongBao) {
     text.innerText = thongBao;
 }
+
+function startCountdown() {
+    countdown = setInterval(function() {
+        remainingTime--;
+        displayTime(remainingTime); // Hiển thị thời gian trên màn hình
+        if (remainingTime <= 0) {
+            stopCountdown();
+            setTimeout(redirectToBaiTap, 500); // Chờ 3 giây trước khi chuyển hướng
+        }
+    }, 1000); // 1000 milliseconds (1 second)
+}
+
+function stopCountdown() {
+    clearInterval(countdown);
+}
+
+function redirectToBaiTap() {
+    // Thực hiện chuyển hướng về trang bài tập sau khi người dùng trả lời xong
+    window.location.href = "{{ url_for('baitap_nhieudapan') }}"; // Thay thế 'ten_ham_bai_tap' bằng tên thực tế của route xử lý bài tập
+}
+
+// Bắt đầu đếm ngược khi trang được tải
+startCountdown();
 </script>
 {% endblock %}
 

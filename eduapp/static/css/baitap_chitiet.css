@@ -162,3 +162,17 @@
   color: rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+.dap_an{
+    display:flex;
+}
+.btn_dap_an{
+    width:50%;
+    height:60px;
+
+}
+.right_answer{
+    background-color:green;
+}
+.wrong_answer{
+    background-color:red;
+}
